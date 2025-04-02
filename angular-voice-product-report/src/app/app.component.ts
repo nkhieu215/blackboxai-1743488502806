@@ -1,16 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { VoiceChatComponent } from './components/voice-chat/voice-chat.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, ProductListComponent, VoiceChatComponent],
   template: `
-    <h1>Welcome to {{title}}!</h1>
+    <div class="min-h-screen bg-gray-50">
+      <!-- Header -->
+      <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4">
+          <h1 class="text-3xl font-bold text-gray-900">
+            Quản lý sản phẩm
+          </h1>
+        </div>
+      </header>
 
-    <router-outlet />
+      <!-- Main Content -->
+      <main>
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <app-product-list #productList></app-product-list>
+          <app-voice-chat></app-voice-chat>
+        </div>
+      </main>
+    </div>
   `,
-  styles: [],
+  styles: []
 })
 export class AppComponent {
-  title = 'angular-voice-product-report';
+  @ViewChild('productList') productList!: ProductListComponent;
+  @ViewChild(VoiceChatComponent) voiceChat!: VoiceChatComponent;
+
+  ngAfterViewInit() {
+    if (this.voiceChat && this.productList) {
+      this.voiceChat.setProductList(this.productList);
+    }
+  }
 }
